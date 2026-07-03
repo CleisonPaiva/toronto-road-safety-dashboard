@@ -1,0 +1,10 @@
+name: geospatial
+channels:
+  - esri
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - arcgis=2.4.3
+  - python-dotenv
+  - jupyter

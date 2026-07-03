@@ -1,0 +1,23 @@
+# Environments
+.env
+config/.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+
+# Dados (raw/processed não devem ir pro Git, geralmente são grandes e/ou baixados sob demanda)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ArcGIS / credenciais em cache
+*.esriaddinx
+.arcgisonline_cache/
+
+# VS Code
+.vscode/
