@@ -69,6 +69,11 @@ if __name__ == "__main__":
     clean_neighbourhoods = remove_invalid_geometries(raw_neighbourhoods)
     save_processed(clean_neighbourhoods, "neighbourhoods_clean.pkl")
 
+    # Escolas
+    raw_schools = load_raw("schools_raw.pkl")
+    clean_schools = remove_invalid_geometries(raw_schools)
+    save_processed(clean_schools, "schools_clean.pkl")
+
     """
     # Investigação temporária: quais bairros foram removidos?
     raw_neighbourhoods = load_raw("neighbourhoods_raw.pkl")
