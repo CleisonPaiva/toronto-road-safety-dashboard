@@ -43,6 +43,11 @@ FIELDS_OF_INTEREST = [
     "PEDESTRIAN",
 ]
 
+# Data de referência fixa para a extração de dados, garantindo que
+# rodar este script em momentos diferentes sempre produza o mesmo
+# resultado (reprodutibilidade), mesmo a fonte sendo atualizada
+# continuamente pela Polícia de Toronto
+EXTRACTION_REFERENCE_DATE = datetime(2026, 7, 6)
 
 def get_collisions_layer():
     """
@@ -91,7 +96,8 @@ def download_recent_collisions(years_back: int = 2) -> pd.DataFrame:
 
     # Constrói a data de corte e formata no padrão que o ArcGIS REST
     # espera dentro de uma cláusula WHERE: timestamp 'YYYY-MM-DD HH:MM:SS'
-    cutoff_date = datetime.now() - timedelta(days=365 * years_back)
+    # cutoff_date = datetime.now() - timedelta(days=365 * years_back)
+    cutoff_date = EXTRACTION_REFERENCE_DATE  - timedelta(days=365 * years_back)
     where_clause = f"OCC_DATE >= timestamp '{cutoff_date.strftime('%Y-%m-%d')} 00:00:00'"
 
     print(f"Consultando colisões desde {cutoff_date.strftime('%Y-%m-%d')}...")

@@ -2,6 +2,7 @@
 .env
 config/.env
 *.env
+run.txt
 
 # Python
 __pycache__/
