@@ -9,185 +9,25 @@
     <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.29/"></script>
 
-    <style>
-        html,
-        body,
-        #viewDiv {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
+    <<link rel="stylesheet" href="./assets/style.css" />
 </head>
 
 <body>
     <div id="viewDiv"></div>
 
-    <script>
-        require([
-            "esri/Map",
-            "esri/views/MapView",
-            "esri/layers/GeoJSONLayer",
-            "esri/widgets/LayerList",
-            "esri/widgets/Legend"
-        ], function (Map, MapView, GeoJSONLayer, LayerList, Legend) {
+    <div id="headerPanel">
+        <h1>Toronto Road Safety Dashboard</h1>
+        <p>Collision analysis (2024–2026) near traffic signals, bike lanes, neighbourhoods, and schools.</p>
+        <p>Data sources: Toronto Police Service Public Safety Data Portal, City of Toronto Open Data Portal, City of
+            Toronto GIS.</p>
+    </div>
 
-            // Cada camada é criada a partir do arquivo GeoJSON local exportado
-            // pelo pipeline Python. O "renderer" define como os pontos/linhas/
-            // polígonos são desenhados (cor, forma), e o "popupTemplate" define
-            // o que aparece quando o usuário clica num elemento no mapa.
+    <div id="creditBadge">
+        Powered by <a href="https://www.linkedin.com/in/paiva-cleison" target="_blank" rel="noopener noreferrer">Cleison
+            Paiva</a>
+    </div>
 
-            const trafficLightIcon = `data:image/svg+xml;utf8,
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="36" viewBox="0 0 20 36">
-                <rect x="2" y="2" width="16" height="32" rx="6" fill="%232C2C2E"/>
-                <circle cx="10" cy="10" r="4.5" fill="%23FF3B30"/>
-                <circle cx="10" cy="18" r="4.5" fill="%23FFCC00"/>
-                <circle cx="10" cy="26" r="4.5" fill="%2334C759"/>
-            </svg>`;
-
-            const signalsLayer = new GeoJSONLayer({
-                url: "./data/collisions_near_signals.geojson",
-                title: "Collisions x Signals (50m)",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "picture-marker",
-                        url: trafficLightIcon,
-                        width: "10px",
-                        height: "18px"
-                    }
-                },
-                popupTemplate: {
-                    title: "Collisions near traffic light",
-                    content: "Date: {OCC_DATE}"
-                },
-                visible: true
-            });
-
-            const bikeIcon = `data:image/svg+xml;utf8,
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="20" viewBox="0 0 32 20">
-    <circle cx="7" cy="14" r="5" fill="none" stroke="%230057B8" stroke-width="2.5"/>
-    <circle cx="25" cy="14" r="5" fill="none" stroke="%230057B8" stroke-width="2.5"/>
-    <path d="M7 14 L14 5 L20 14 M14 5 L18 5 M20 14 L25 14 M11 9 L20 9"
-          fill="none" stroke="%230057B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`;
-
-            const bikeLanesLayer = new GeoJSONLayer({
-                url: "./data/collisions_near_bike_lanes.geojson",
-                title: "Collisions x Bike Lanes (25m)",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "picture-marker",
-                        url: bikeIcon,
-                        width: "26px",
-                        height: "16px"
-                    }
-                },
-                popupTemplate: {
-                    title: "Collisions near bike lane",
-                    content: "Date: {OCC_DATE}"
-                },
-                visible: false
-            });
-
-            const neighbourhoodPinIcon = `data:image/svg+xml;utf8,
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
-    <path d="M12 0 C5.4 0 0 5.4 0 12 C0 21 12 32 12 32 C12 32 24 21 24 12 C24 5.4 18.6 0 12 0 Z"
-          fill="%238E44AD"/>
-    <circle cx="12" cy="12" r="5" fill="white"/>
-  </svg>`;
-
-            const neighbourhoodsLayer = new GeoJSONLayer({
-                url: "./data/collisions_by_neighbourhood.geojson",
-                title: "Collisions by Neighbourhood",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "picture-marker",
-                        url: neighbourhoodPinIcon,
-                        width: "14px",
-                        height: "19px"
-                    }
-                },
-                popupTemplate: {
-                    title: "{AREA_NAME}",
-                    content: "Date of collision: {OCC_DATE}"
-                },
-                visible: false
-            });
-
-            const schoolIcon = `data:image/svg+xml;utf8,
-  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-    <rect x="3" y="12" width="22" height="14" fill="%23D64545"/>
-    <path d="M14 2 L26 12 L2 12 Z" fill="%238B2E2E"/>
-    <rect x="12" y="17" width="4" height="9" fill="white"/>
-    <rect x="6" y="16" width="4" height="4" fill="white"/>
-    <rect x="18" y="16" width="4" height="4" fill="white"/>
-  </svg>`;
-
-            const schoolsLayer = new GeoJSONLayer({
-                url: "./data/collisions_near_schools.geojson",
-                title: "Collisions x Schools (150m)",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "picture-marker",
-                        url: schoolIcon,
-                        width: "18px",
-                        height: "18px"
-                    }
-                },
-                popupTemplate: {
-                    title: "Collisions near school",
-                    content: "Date: {OCC_DATE}"
-                },
-                visible: false
-            });
-
-            const neighbourhoodsChoropleth = new GeoJSONLayer({
-                url: "./data/neighbourhoods_with_counts.geojson",
-                title: "Collisions Density by Neighbourhood",
-                renderer: {
-                    type: "class-breaks",
-                    field: "COLLISION_COUNT",
-                    classBreakInfos: [
-                        { minValue: 0, maxValue: 315, symbol: { type: "simple-fill", color: [255, 243, 176, 0.6], outline: { color: "#999", width: 0.5 } } },
-                        { minValue: 315.01, maxValue: 425.8, symbol: { type: "simple-fill", color: [255, 204, 102, 0.6], outline: { color: "#999", width: 0.5 } } },
-                        { minValue: 425.81, maxValue: 591.2, symbol: { type: "simple-fill", color: [255, 153, 51, 0.6], outline: { color: "#999", width: 0.5 } } },
-                        { minValue: 591.21, maxValue: 896.0, symbol: { type: "simple-fill", color: [230, 74, 25, 0.6], outline: { color: "#999", width: 0.5 } } },
-                        { minValue: 896.01, maxValue: 3220, symbol: { type: "simple-fill", color: [183, 28, 28, 0.6], outline: { color: "#999", width: 0.5 } } }
-                    ]
-                },
-                popupTemplate: {
-                    title: "{AREA_NAME}",
-                    content: "Total collisions (last 2 years): {COLLISION_COUNT}"
-                },
-                visible: false
-            });
-
-            const map = new Map({
-                basemap: "osm",  // OpenStreetMap
-                layers: [neighbourhoodsChoropleth, signalsLayer, bikeLanesLayer, neighbourhoodsLayer, schoolsLayer]
-            });
-
-            const view = new MapView({
-                container: "viewDiv",
-                map: map,
-                center: [-79.38, 43.70],  // centro aproximado de Toronto
-                zoom: 11
-            });
-
-            // Widget que permite ligar/desligar cada camada, com controle
-            // de visibilidade — é o "toggle" que você pediu
-            const layerList = new LayerList({ view: view });
-            view.ui.add(layerList, "top-right");
-
-            const legend = new Legend({ view: view });
-            view.ui.add(legend, "bottom-left");
-        });
-    </script>
+    <script src="./assets/map-config.js"></script>
 </body>
 
 </html>
