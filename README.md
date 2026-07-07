@@ -2,7 +2,7 @@
 
 An interactive web map analyzing traffic collision patterns in Toronto in relation to traffic signals, bike lanes, neighbourhoods, and schools  built with the **ArcGIS API for Python** and the **ArcGIS API for JavaScript**.
 
-🔗 **[Live Demo](#)** _(add your GitHub Pages link here)_
+🔗 **[Live Demo](https://cleisonpaiva.github.io/toronto-road-safety-dashboard/)**
 🇧🇷 [Versão em Português](README.pt-br.md)
 
 ---

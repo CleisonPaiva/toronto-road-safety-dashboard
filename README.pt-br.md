@@ -2,7 +2,7 @@
 
 Um mapa web interativo analisando padrões de colisões de trânsito em Toronto em relação a semáforos, ciclovias, bairros e escolas  construído com **ArcGIS API for Python** e **ArcGIS API for JavaScript**.
 
-🔗 **[Demo ao vivo](#)** _(adicione seu link do GitHub Pages aqui)_
+🔗 **[Demo ao vivo](https://cleisonpaiva.github.io/toronto-road-safety-dashboard/)**
 🇬🇧 [English Version](README.md)
 
 ---
