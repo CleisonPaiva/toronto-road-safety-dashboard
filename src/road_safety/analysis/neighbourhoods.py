@@ -48,6 +48,26 @@ def validate_against_existing_field(joined: pd.DataFrame) -> pd.DataFrame:
 
     return joined
 
+def aggregate_collision_counts(within_neighbourhoods: pd.DataFrame, neighbourhoods_sdf: pd.DataFrame) -> pd.DataFrame:
+    """
+    Conta quantas colisões caíram em cada bairro, e junta essa contagem
+    de volta ao DataFrame de polígonos .
+    """
+
+    # TODO 1: faça uma contagem de colisões por bairro, usando o campo
+    # "AREA_NAME" do DataFrame de colisões (within_neighbourhoods),
+    count = within_neighbourhoods.groupby("AREA_NAME").size().reset_index(name="COLLISION_COUNT")
+
+    # TODO 2: faça um merge do DataFrame de contagem com o DataFrame de
+    # bairros (neighbourhoods_sdf), usando "AREA_NAME" como chave,
+    # garantindo que todos os bairros sejam incluídos (mesmo sem colisões)
+    result = pd.merge(neighbourhoods_sdf, count, on="AREA_NAME", how="left")
+
+    # TODO 3: preencha os valores NaN da coluna COLLISION_COUNT com 0
+    result["COLLISION_COUNT"] = result["COLLISION_COUNT"].fillna(0)
+
+    return result
+
 
 if __name__ == "__main__":
     collisions = load_processed("collisions_clean.pkl")
@@ -63,4 +83,9 @@ if __name__ == "__main__":
 
     within_neighbourhoods = validate_against_existing_field(within_neighbourhoods)
 
+    neighbourhoods_with_counts = aggregate_collision_counts(within_neighbourhoods, neighbourhoods)
+    save_processed(neighbourhoods_with_counts, "neighbourhoods_with_counts.pkl")
+
     save_processed(within_neighbourhoods, "collisions_by_neighbourhood.pkl")
+
+    print(neighbourhoods_with_counts[["AREA_NAME", "COLLISION_COUNT"]].sort_values("COLLISION_COUNT", ascending=False).head(10))

@@ -42,3 +42,6 @@ if __name__ == "__main__":
     collisions_near_schools = load_processed("collisions_near_schools.pkl")
     export_to_geojson(collisions_near_schools, "collisions_near_schools.geojson")
 
+    neighbourhoods_with_counts = load_processed("neighbourhoods_with_counts.pkl")
+    export_to_geojson(neighbourhoods_with_counts, "neighbourhoods_with_counts.geojson")
+
